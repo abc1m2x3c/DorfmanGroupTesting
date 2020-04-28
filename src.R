@@ -259,6 +259,33 @@ Dorfman.profileLR.CI.EP<-function(){ #likelihood ratio confidence interval #EP=e
   }
   return (EP)
 }
+
+# Dorfman.profileLR.CI.EP.realdata<-function(res_mle){ #likelihood ratio confidence interval #EP=end points
+#   EP=matrix(nrow=3,ncol=2)
+#   for (i in 1:3){
+#     profle.func<-function(param){
+#       max.func<-function(other_param){
+#         theta=append(other_param,param,i-1)
+#         return (Dorfman.llf.all(theta))
+#       }
+#       A=matrix(nrow=6,ncol=3,c( 1,-1,0,0,0,0,0,0,1,-1,0,0,0,0,0,0,1,-1))
+#       B=c(0,1,-0.5,1,-0.5,1)
+#       A=A[-((i*2-1):(i*2)),-i]
+#       B=B[-((i*2-1):(i*2))]
+#       res=maxNM(max.func,start=res_mle$estimate[-i],constraints=list(ineqA=A, ineqB=B),control=list(printLevel=0))
+#       return(2*(res_mle$maximum-res$maximum)-qchisq(0.95,1))
+#     }
+#     EP[i,1]=bisect.forProfile(profle.func,x0=res_mle$estimate[i],x1=0,tol=1e-6)
+#     if (is.na(EP[i,1])){
+#       EP[i,1]=0
+#     }
+#     EP[i,2]=bisect.forProfile(profle.func,x0=res_mle$estimate[i],x1=1,tol=1e-6)
+#     if (is.na(EP[i,2])){
+#       EP[i,2]=1
+#     }    
+#   }
+#   return (EP)
+# }
 ##################################################4/18/2020 above
 #calculate the characteristic corresponding to expr (e.g. ET, EC, PPV, NPV) at mle of p,Se and Sp
 get_characteristic_at_mle <- function(expr){
@@ -740,7 +767,7 @@ Dorfman.IM.all<-function(theta){
 }
 
 
-DT.summary<-function(my.data){
+DT.fit<-function(my.data){
   ##calculate mle and related variables
   #A and B construct inequality for 0<p<1, 0.5<Se,Sp<1
   A=matrix(nrow=6,ncol=3,c( 1,-1,0,0,0,0,0,0,1,-1,0,0,0,0,0,0,1,-1))
@@ -748,11 +775,17 @@ DT.summary<-function(my.data){
   res_mle=maxNM(Dorfman.llf.all,start=c(0.1,0.9,0.9),constraints=list(ineqA=A, ineqB=B),control=list(printLevel=0))
   theta_mle = res_mle$estimate
   theta_mle
-  
+
   Dorfman_IM_mle=Dorfman.IM.all(theta_mle) #information matrix of all data
-  
+
   
   Sigma=sqrt(diag(solve(Dorfman_IM_mle))) #the standard deviation calculated from the information matrix
+
+  assign("Dorfman_IM_mle",Dorfman_IM_mle , envir = .GlobalEnv)
+  assign("res_mle",res_mle , envir = .GlobalEnv)
+  assign("theta_mle",theta_mle , envir = .GlobalEnv)
+  assign("Sigma",Sigma , envir = .GlobalEnv)
+  
   
   #Wald CI for each of p, Se, and Sp
   Wald_CI=
@@ -762,18 +795,17 @@ DT.summary<-function(my.data){
       c(res_mle$estimate[3]-qnorm(0.975)*Sigma[3], res_mle$estimate[3]+qnorm(0.975)*Sigma[3])
     )
   row.names(Wald_CI)=c('p','Se','Sp')
-  
-  
+
+
   #Profile CI for each of p, Se, and Sp
   Profile_CI=Dorfman.profileLR.CI.EP()
   row.names(Profile_CI)=c('p','Se','Sp')
   Profile_CI
-  
+
   #summary the output with respect to p, Se, and Sp
   output_pSeSp=cbind(theta_mle,Sigma,Wald_CI,Profile_CI)
   colnames(output_pSeSp)=c('est','std err','95% Wald L','95% Wald U','95% Profile L','95% Profile U')
   return (output_pSeSp)
-  
 }
 
 
@@ -843,10 +875,10 @@ DT.chr<-function(my.data){
     res=rbind(character_interval_ET,character_interval_EC,character_interval_PPV,character_interval_NPV)
     row.names(res)=c('E(T)','E(C)','PPV','NPV')
     colnames(res)=c('L','U')
-    cat('The Wald CI of group testing characteristics of pool size ',grp_size,' is :\n',sep='')
-    print(res)
-    cat('\n')
-    final_res[[i]]=rbind(final_res,res)
+    # cat('The Wald CI of group testing characteristics of pool size ',grp_size,' is :\n',sep='')
+    # print(res)
+    # cat('\n')
+    final_res[[i]]=res
     names(final_res)[i]=paste('pool size ',grp_size,sep='')
   }
   return(final_res)
