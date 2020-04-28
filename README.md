@@ -1,14 +1,14 @@
 # Dorfman testing for COVID19 data
 This repository contains R codes for the article "Using Dorfman group testing during the COVID-19 outbreak in
 the United States".
-To use the program in this repo, please include the following command at the beginning of the program: 
+To use the program in this repository, please include the following command at the beginning of the program: 
 ```
 source("https://raw.githubusercontent.com/abc1m2x3c/DorfmanGroupTesting/master/src.R")
 ```
 In addition, this program requires 3 external R packages 'maxLik', 'rgl', and 'reshape'.
 
 ## A simple example 
-Below is an example of R codes to manually input and analyze a Dorfman testing Data set.
+Below is an example of R codes to manually input and analyze a Dorfman testing data set.
 
 ### Step 1. Clean the memory, load the required R packages, and source the code in this repository  
 ```
@@ -22,7 +22,7 @@ source("https://raw.githubusercontent.com/abc1m2x3c/DorfmanGroupTesting/master/s
 ```
 my.data=interative.input()
 ```
-This is an interactive procedure. Users can input as many data as needed. A sample display of this procedure is shown below.
+This is an interactive procedure. Users can input as much data as needed. A sample display of this procedure is shown below.
 ```
 ##################################
 ######Please input your data######
