@@ -22,7 +22,7 @@ source("https://raw.githubusercontent.com/abc1m2x3c/DorfmanGroupTesting/master/s
 ```
 my.data=interative.input()
 ```
-A sample display of the input procedure is
+This is an interactive procedure. Users can input as many data as needed. A sample display of this procedure is shown below.
 ```
 ##################################
 ######Please input your data######
@@ -42,7 +42,7 @@ Is this the end of your data (Y/N)? Y
 ```
 
 ### Step 3. Data analysis
-Calculate the maximum likelihood estimates and the confidence intervals for each of the parameters p (prevalence), Se (sensitivity), and Sp (specificity).
+First, calculate the maximum likelihood estimates and the confidence intervals for each of the parameters p (prevalence), Se (sensitivity), and Sp (specificity).
 ```
 DT.fit(my.data)
 ```
@@ -53,9 +53,30 @@ p  0.07172404 0.03293992 0.007162988  0.1362851    0.03483162     0.1238392
 Se 0.99999864 0.10675137 0.790769793  1.2092275    0.76901045     1.0000000
 Sp 0.99999726 0.04123922 0.919169876  1.0808246    0.90546264     1.0000000
 ```
-To plot the Wald-type joint confidence region of (p, Se, Sp),
+Secondly, plot the Wald-type joint confidence region of (p, Se, Sp).
 ```
 DT.plot(my.data,type='Wald')
 ```
+The sample output is shown below. It is a 3D plot that can be rotated interactively using R command 'plot3D'.
+![](../master/Wald_example.JPG|width=100)
+
+Lastly, calculate the Wald confidence intervals of group testing charateristics for each pool size.
+```
+DT.chr(my.data)
+```
 The sample output is
-![Optional Text](../master/Example.png)
+```
+$`pool size 5`
+             L         U
+E(T) 0.3448607 0.6766145
+E(C) 0.9893016 1.0106967
+PPV  0.7306390 1.2693427
+NPV  0.9676666 1.0323330
+
+$`pool size 4`
+             L         U
+E(T) 0.3680058 0.6469566
+E(C) 0.9849983 1.0150003
+PPV  0.7906560 1.2093298
+NPV  0.9676666 1.0323330
+```
