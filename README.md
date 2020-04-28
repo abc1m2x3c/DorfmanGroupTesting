@@ -58,7 +58,8 @@ Secondly, plot the Wald-type joint confidence region of (p, Se, Sp).
 DT.plot(my.data,type='Wald')
 ```
 The sample output is shown below. It is a 3D plot that can be rotated interactively using R command 'plot3D'.
-![](../master/Wald_example.JPG|width=100)
+![](https://github.com/abc1m2x3c/DorfmanGroupTesting/blob/master/Wald_example2.JPG)
+
 
 Lastly, calculate the Wald confidence intervals of group testing charateristics for each pool size.
 ```
